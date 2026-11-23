@@ -49,4 +49,4 @@ Homelabarr is a fork of [CometTools/LunaSea](https://github.com/CometTools/LunaS
 - **Smart Release Age Formatting:** Shows precise hours (`h`) and minutes (`m`) for releases under 24 hours instead of `0d`.
 - **4 Live Themes & Matching Native iOS Alternate App Icons:** *Forest Sage*, *Midnight Ocean*, *Obsidian Gold*, and *Crimson Noir* with custom H + mini server rack icons.
 - **Guided First-Time Setup Walkthrough** with Skip on every step and Skip All.
-- **iOS 15–27 Support** including native `UIScene` lifecycle adoption.
+- **iOS 26+ Support** including native `UIScene` lifecycle adoption.
