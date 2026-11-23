@@ -1,51 +1,77 @@
 # Homelabarr
 
-> **Fork Notice:** Homelabarr is an independent, community-maintained fork of **[LunaSea](https://github.com/CometTools/LunaSea)** by [Jagandeep Brar (CometTools)](https://github.com/CometTools), redistributed under the **GNU General Public License v3.0 (GPL-3.0)**. All credit for the core application architecture and `*arr` module integrations goes to the original LunaSea project.
+> **Fork Notice:** Homelabarr is an independent, community-maintained fork of **[LunaSea](https://github.com/CometTools/LunaSea)** by [Jagandeep Brar (CometTools)](https://github.com/CometTools), redistributed under the **GNU General Public License v3.0 (GPL-3.0)**. All credit for the core application architecture and base `*arr` integrations goes to the original LunaSea project.
 
-A modern, self-hosted iOS companion app for managing your entire `*arr`, Usenet, Torrent, and Homelab media stack — built on top of [CometTools/LunaSea](https://github.com/CometTools/LunaSea) with native **Prowlarr Interactive Search**, **qBittorrent / Transmission / Deluge** torrent clients, **NZBGet & SABnzbd** multi-downloader dispatch, **Overseerr / Jellyseerr**, **Bazarr** (with Search All Missing), **4 customizable Dashboard layouts**, **4 live themes with matching native iOS app icons**, and a usage-grouped **First-Time Setup Walkthrough**.
+**Homelabarr** is an all-in-one, self-hosted iOS app for managing your media server stack (`*arr` apps, Usenet & Torrent downloaders, indexers, requests, and subtitles) — with zero telemetry, zero cloud accounts, and full local control.
 
 > See [CHANGELOG.md](CHANGELOG.md) for full version history.
 
 ---
 
-## Features
+## Supported Apps
 
-### Native Prowlarr Interactive Search
-- **Inline Search inside Radarr & Sonarr:** Trigger Prowlarr directly from any Movie or Episode's Interactive Search screen without switching apps.
-- **Live Quality Profile Checking:** Automatically checks every Prowlarr result against the active Radarr/Sonarr Quality Profile for that title. Mismatched releases are flagged in red with an explanation dialog, and matching releases are automatically sorted to the top.
-- **Live Blocklist Checking:** Cross-references your Radarr/Sonarr blocklist in real time so previously failed or rejected releases are clearly marked before you download them.
-- **Smart Release Age Formatting:** Releases younger than 24 hours display precise age in hours (`h`) and minutes (`m`) instead of `0d`.
-- **1-Tap Send to NZBGet:** Send any release straight to NZBGet directly from the expandable release card.
+| Category | Apps Included |
+| --- | --- |
+| **Media Managers (`*arr`)** | **Radarr** (Movies), **Sonarr** (TV Shows), **Lidarr** (Music), **Bazarr** (Subtitles) |
+| **Indexers & Search** | **Prowlarr** (Inline + Standalone), Newznab Search |
+| **Usenet Downloaders (NZB)** | **NZBGet**, **SABnzbd** |
+| **Torrent Clients (Docker / WebUI)** | **qBittorrent**, **Transmission**, **Deluge** |
+| **Requests & Monitoring** | **Overseerr / Jellyseerr**, **Tautulli** (Plex Stats), External Modules, Wake on LAN |
 
-### 4 Live Themes & Matching Native iOS App Icons
-Switch themes on the fly in **Settings** (or during First-Time Setup) — the app UI, navigation drawer header, and **iOS Home Screen app icon** all update together:
+---
+
+## Key Features
+
+### 1. Native Prowlarr Interactive Search
+- **Built Directly into Radarr & Sonarr:** Search Prowlarr right inside any movie or episode's release screen — no switching apps.
+- **Automatic Quality Profile Checks:** Every release is checked against that title's active Radarr/Sonarr Quality Profile. Matching releases are sorted to the top, while mismatched releases are clearly flagged in red with the exact reason.
+- **Live Blocklist Warnings:** Automatically cross-checks your Radarr/Sonarr blocklist so previously failed or rejected releases are highlighted before you download them.
+- **Smart Release Age:** Releases posted less than 24 hours ago show exact hours (`h`) and minutes (`m`) instead of `0d`.
+- **Smart 1-Tap Download Dispatch:**
+  - **NZB releases** go straight to **NZBGet** or **SABnzbd** (with a quick picker if you use both).
+  - **Torrent releases** go straight to **qBittorrent**, **Transmission**, or **Deluge**.
+
+### 2. Full Torrent & Usenet Downloader Control
+- **qBittorrent, Transmission & Deluge:** Monitor live download/upload speeds and progress bars, pause or resume torrents, remove torrents (with optional file deletion), and paste magnet links or `.torrent` URLs directly from your iPhone.
+- **NZBGet & SABnzbd:** Full queue, speed, history, and 1-tap send support.
+
+### 3. Overseerr / Jellyseerr, Standalone Prowlarr & Bazarr
+- **Overseerr / Jellyseerr:** Browse **Trending** movies and TV shows, search and submit new requests, and **Approve, Decline, or Delete** pending requests in one tap.
+- **Standalone Prowlarr:** Run global searches across all your indexers with category filters (*All, Movies, TV, Music, Books*), view indexer health warnings, and **Test** any indexer directly.
+- **Bazarr:** View movies and episodes missing subtitles, trigger 1-tap per-item searches, or tap **Search All Missing** to scan your whole wanted list.
+
+### 4. Customizable Dashboard Layouts
+Tap the layout button in the Dashboard top bar to switch instantly between 4 visual styles:
+- **Stacked Tiles** — Classic full-width cards with descriptions
+- **2-Column Grid** — Modern side-by-side cards with icon badges
+- **3-Column Compact Grid** — App-launcher style compact icon tiles
+- **Grouped by Usage** — Organized into *Media Managers*, *Indexers & Search*, *Downloaders*, *Requests & Monitoring*, and *System & Tools*
+
+### 5. 4 Live Themes & Matching Native iOS App Icons
+Switch themes anytime in **Settings** or during onboarding — the entire UI, drawer header, and **iPhone Home Screen app icon** update together:
 - **Forest Sage** *(Default)* — Deep charcoal & muted forest sage greens
 - **Midnight Ocean** — Cool midnight navy & slate ocean blues
 - **Obsidian Gold** — Rich obsidian dark & warm brushed gold
 - **Crimson Noir** — Deep noir & refined crimson accents
 
-### Guided First-Time Setup Walkthrough
-- Clean **blank-slate** onboarding that walks you through choosing a theme and connecting **Radarr**, **Sonarr**, **Prowlarr**, **NZBGet**, **SABnzbd**, **Lidarr**, **Tautulli**, and more.
-- **Skip any step** (or **Skip All**) and configure services later at your own pace.
-
-### Full `*arr`, Torrent, NZB & Homelab Support
-- **Media Managers:** Radarr, Sonarr, Lidarr, and **Bazarr** (wanted subtitles + 1-tap **Search All Missing**).
-- **Usenet Downloaders:** **NZBGet** and **SABnzbd** (with multi-downloader picker in Prowlarr Search).
-- **Torrent Clients (Docker / WebUI):** **qBittorrent**, **Transmission**, and **Deluge** (queue, speeds, pause/resume/delete, add magnet/URL, and direct Prowlarr torrent dispatch).
-- **Indexers, Requests & Monitoring:** **Standalone Prowlarr** (global search, indexers & health tests), **Overseerr / Jellyseerr** (requests, approve/decline, search & trending), **Tautulli**, Newznab search, and External Modules.
-- **4 Dashboard Layouts:** Switch live between **Stacked Tiles**, **2-Column Grid**, **3-Column Compact Grid**, and **Grouped by Usage**.
-- **Usage-Grouped Setup Walkthrough:** Turn on only the apps you run by category — anything enabled appears immediately on your Dashboard and Side Bar.
+### 6. Usage-Grouped First-Time Setup & Unified Configuration
+- **Guided Setup Walkthrough:** Walks you through your stack by category (*Media Managers*, *Indexers*, *Usenet*, *Torrents*, *Requests & Monitoring*) with **Skip** on every step and **Skip All**.
+- **Instant Dashboard & Side Bar Sync:** Turning any app on in **Settings → Configuration** (or during setup) immediately adds it to both your Dashboard and pull-out Side Bar.
 
 ---
 
-## Installation (iOS)
+## Installation (iOS 15+)
 
-Homelabarr is distributed as an unsigned `.ipa` for sideloading on iOS 15+.
+Homelabarr is distributed as an unsigned `.ipa` for sideloading.
 
 ### Option 1: SideStore *(Recommended — Auto-Refreshes Over Wi-Fi)*
 1. Install [SideStore](https://sidestore.io) on your iPhone.
-2. Add this repository's `altstore-source.json` URL as a Source in SideStore, **or** download `Homelabarr-v1.1.0-unsigned.ipa` from the [Releases](../../releases) page and import it into SideStore.
-3. SideStore automatically refreshes the 7-day signature over Wi-Fi without needing a Mac/PC.
+2. Add this repository's source URL in SideStore:
+   ```
+   https://raw.githubusercontent.com/BzmHD/Homelabarr/main/altstore-source.json
+   ```
+   *(Or download `Homelabarr-v1.1.0-unsigned.ipa` directly from [Releases](../../releases) and import it into SideStore.)*
+3. SideStore automatically refreshes the 7-day signature over Wi-Fi without needing a computer.
 
 ### Option 2: AltStore / Sideloadly
 1. Download `Homelabarr-v1.1.0-unsigned.ipa` from the [Releases](../../releases) page.
