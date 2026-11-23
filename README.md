@@ -2,7 +2,9 @@
 
 > **Fork Notice:** Homelabarr is an independent, community-maintained fork of **[LunaSea](https://github.com/CometTools/LunaSea)** by [Jagandeep Brar (CometTools)](https://github.com/CometTools), redistributed under the **GNU General Public License v3.0 (GPL-3.0)**. All credit for the core application architecture and `*arr` module integrations goes to the original LunaSea project.
 
-A modern, self-hosted iOS companion app for managing your `*arr` media stack — built on top of [CometTools/LunaSea](https://github.com/CometTools/LunaSea) with native **Prowlarr Interactive Search**, live **Quality Profile & Blocklist** verification, **4 live themes with matching native iOS app icons**, and a guided **First-Time Setup Walkthrough**.
+A modern, self-hosted iOS companion app for managing your entire `*arr`, Usenet, Torrent, and Homelab media stack — built on top of [CometTools/LunaSea](https://github.com/CometTools/LunaSea) with native **Prowlarr Interactive Search**, **qBittorrent / Transmission / Deluge** torrent clients, **NZBGet & SABnzbd** multi-downloader dispatch, **Overseerr / Jellyseerr**, **Bazarr** (with Search All Missing), **4 customizable Dashboard layouts**, **4 live themes with matching native iOS app icons**, and a usage-grouped **First-Time Setup Walkthrough**.
+
+> See [CHANGELOG.md](CHANGELOG.md) for full version history.
 
 ---
 
