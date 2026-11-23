@@ -1,6 +1,8 @@
 # Homelabarr
 
-A modern, self-hosted iOS companion app for managing your `*arr` media stack — built on top of [LunaSea](https://github.com/CometTools/LunaSea) with native **Prowlarr Interactive Search**, live **Quality Profile & Blocklist** verification, **4 live themes with matching native iOS app icons**, and a guided **First-Time Setup Walkthrough**.
+> **Fork Notice:** Homelabarr is an independent, community-maintained fork of **[LunaSea](https://github.com/CometTools/LunaSea)** by [Jagandeep Brar (CometTools)](https://github.com/CometTools), redistributed under the **GNU General Public License v3.0 (GPL-3.0)**. All credit for the core application architecture and `*arr` module integrations goes to the original LunaSea project.
+
+A modern, self-hosted iOS companion app for managing your `*arr` media stack — built on top of [CometTools/LunaSea](https://github.com/CometTools/LunaSea) with native **Prowlarr Interactive Search**, live **Quality Profile & Blocklist** verification, **4 live themes with matching native iOS app icons**, and a guided **First-Time Setup Walkthrough**.
 
 ---
 
@@ -68,6 +70,7 @@ In Xcode:
 
 ## Attribution & License
 
-Homelabarr is a fork of [LunaSea](https://github.com/CometTools/LunaSea) by Jagandeep Brar (CometTools), licensed under the **GNU General Public License v3.0 (GPL-3.0)**.
+Homelabarr is a fork of **[CometTools/LunaSea](https://github.com/CometTools/LunaSea)** (originally created by Jagandeep Brar / CometTools) and is licensed under the **GNU General Public License v3.0 (GPL-3.0)**.
 
-See [LICENSE](LICENSE) for full license terms.
+- **Upstream Repository:** https://github.com/CometTools/LunaSea
+- **License:** [LICENSE](LICENSE) (GPL-3.0)
