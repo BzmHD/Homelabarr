@@ -4,6 +4,7 @@ import 'package:lunasea/modules/settings.dart';
 import 'package:lunasea/router/routes/settings.dart';
 import 'package:lunasea/system/quick_actions/quick_actions.dart';
 import 'package:lunasea/utils/profile_tools.dart';
+import 'package:lunasea/modules/homelabarr_dev/dev_settings_route.dart';
 
 class ConfigurationRoute extends StatefulWidget {
   const ConfigurationRoute({
@@ -97,9 +98,49 @@ class _State extends State<ConfigurationRoute> with LunaScrollControllerMixin {
   }
 
   List<Widget> _moduleList() {
-    return ([LunaModule.DASHBOARD, ...LunaModule.active])
-        .map(_tileFromModuleMap)
-        .toList();
+    final entries = <MapEntry<String, Widget>>[
+      for (final module in [LunaModule.DASHBOARD, ...LunaModule.active])
+        MapEntry(module.title.toLowerCase(), _tileFromModuleMap(module)),
+      MapEntry(
+        'bazarr',
+        _devAppTile('Bazarr', 'Configure Bazarr', Icons.subtitles_rounded, 'bazarr'),
+      ),
+      MapEntry(
+        'deluge',
+        _devAppTile('Deluge', 'Configure Deluge', Icons.water_drop_rounded, 'deluge'),
+      ),
+      MapEntry(
+        'overseerr',
+        _devAppTile('Overseerr', 'Configure Overseerr / Jellyseerr', Icons.movie_filter_rounded, 'overseerr'),
+      ),
+      MapEntry(
+        'prowlarr',
+        _devAppTile('Prowlarr', 'Configure Prowlarr', Icons.travel_explore_rounded, 'prowlarr'),
+      ),
+      MapEntry(
+        'qbittorrent',
+        _devAppTile('qBittorrent', 'Configure qBittorrent', Icons.downloading_rounded, 'qbit'),
+      ),
+      MapEntry(
+        'transmission',
+        _devAppTile('Transmission', 'Configure Transmission', Icons.swap_vert_circle_rounded, 'transmission'),
+      ),
+    ];
+    entries.sort((a, b) => a.key.compareTo(b.key));
+    return entries.map((e) => e.value).toList();
+  }
+
+  Widget _devAppTile(String title, String subtitle, IconData icon, String appId) {
+    return LunaBlock(
+      title: title,
+      body: [TextSpan(text: subtitle)],
+      trailing: LunaIconButton(icon: icon),
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => HomelabarrDevSettingsRoute(filterApp: appId),
+        ),
+      ),
+    );
   }
 
   Widget _tileFromModuleMap(LunaModule module) {

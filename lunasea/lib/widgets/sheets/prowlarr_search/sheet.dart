@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lunasea/core.dart';
+import 'package:lunasea/modules/homelabarr_dev/download_clients_api.dart';
 import 'package:lunasea/extensions/string/string.dart';
 
 class ProwlarrConfig {
@@ -294,12 +295,33 @@ class ProwlarrApi {
     Map<String, dynamic> item, {
     String category = 'all',
   }) async {
-    final dlUrl = (item['downloadUrl'] ?? '').toString();
+    final protocol = (item['protocol'] ?? 'usenet').toString().toLowerCase();
+    final isTorrent = protocol == 'torrent';
+    final dlUrl = (isTorrent
+            ? (item['magnetUrl'] ?? item['downloadUrl'] ?? '')
+            : (item['downloadUrl'] ?? ''))
+        .toString();
     final title = (item['title'] ?? 'download').toString();
     if (dlUrl.isEmpty) {
       showLunaErrorSnackBar(
         title: 'Download Failed',
         message: 'Release has no download URL',
+      );
+      return;
+    }
+
+    final profile = LunaProfile.current;
+    final hasSab = profile.sabnzbdEnabled &&
+        profile.sabnzbdHost.trim().isNotEmpty &&
+        profile.sabnzbdKey.trim().isNotEmpty;
+
+    if (isTorrent || hasSab) {
+      await DownloadClientsApi.dispatchRelease(
+        context: LunaState.context,
+        title: title,
+        downloadUrl: dlUrl,
+        isTorrent: isTorrent,
+        category: category == 'movies' ? 'movies' : (category == 'tv' ? 'tv' : ''),
       );
       return;
     }

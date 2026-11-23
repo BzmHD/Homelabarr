@@ -26,8 +26,13 @@ Switch themes on the fly in **Settings** (or during First-Time Setup) — the ap
 - Clean **blank-slate** onboarding that walks you through choosing a theme and connecting **Radarr**, **Sonarr**, **Prowlarr**, **NZBGet**, **SABnzbd**, **Lidarr**, **Tautulli**, and more.
 - **Skip any step** (or **Skip All**) and configure services later at your own pace.
 
-### Full `*arr` & Homelab Module Support
-Includes full support for **Radarr**, **Sonarr**, **Lidarr**, **NZBGet**, **SABnzbd**, **Tautulli**, **Overseerr**, **Prowlarr**, Newznab search, and External Modules.
+### Full `*arr`, Torrent, NZB & Homelab Support
+- **Media Managers:** Radarr, Sonarr, Lidarr, and **Bazarr** (wanted subtitles + 1-tap **Search All Missing**).
+- **Usenet Downloaders:** **NZBGet** and **SABnzbd** (with multi-downloader picker in Prowlarr Search).
+- **Torrent Clients (Docker / WebUI):** **qBittorrent**, **Transmission**, and **Deluge** (queue, speeds, pause/resume/delete, add magnet/URL, and direct Prowlarr torrent dispatch).
+- **Indexers, Requests & Monitoring:** **Standalone Prowlarr** (global search, indexers & health tests), **Overseerr / Jellyseerr** (requests, approve/decline, search & trending), **Tautulli**, Newznab search, and External Modules.
+- **4 Dashboard Layouts:** Switch live between **Stacked Tiles**, **2-Column Grid**, **3-Column Compact Grid**, and **Grouped by Usage**.
+- **Usage-Grouped Setup Walkthrough:** Turn on only the apps you run by category — anything enabled appears immediately on your Dashboard and Side Bar.
 
 ---
 
@@ -37,11 +42,11 @@ Homelabarr is distributed as an unsigned `.ipa` for sideloading on iOS 15+.
 
 ### Option 1: SideStore *(Recommended — Auto-Refreshes Over Wi-Fi)*
 1. Install [SideStore](https://sidestore.io) on your iPhone.
-2. Add this repository's `altstore-source.json` URL as a Source in SideStore, **or** download `Homelabarr-v1.0.0-unsigned.ipa` from the [Releases](../../releases) page and import it into SideStore.
+2. Add this repository's `altstore-source.json` URL as a Source in SideStore, **or** download `Homelabarr-v1.1.0-unsigned.ipa` from the [Releases](../../releases) page and import it into SideStore.
 3. SideStore automatically refreshes the 7-day signature over Wi-Fi without needing a Mac/PC.
 
 ### Option 2: AltStore / Sideloadly
-1. Download `Homelabarr-v1.0.0-unsigned.ipa` from the [Releases](../../releases) page.
+1. Download `Homelabarr-v1.1.0-unsigned.ipa` from the [Releases](../../releases) page.
 2. Install via [AltStore](https://altstore.io) or [Sideloadly](https://sideloadly.io) using your Apple ID.
 
 ### Option 3: Build from Source (Xcode)

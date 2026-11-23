@@ -16,6 +16,14 @@
       "category": "utilities",
       "versions": [
         {
+          "version": "1.1.0",
+          "date": "2026-11-23",
+          "localizedDescription": "Adds qBittorrent, Transmission & Deluge torrent clients, multi-downloader Prowlarr Search (NZBGet/SABnzbd/Torrents), Overseerr/Jellyseerr, standalone Prowlarr, Bazarr with Search All Missing, 4 Dashboard layouts (Stacked, 2-Col Grid, 3-Col Grid, Grouped), and usage-grouped Setup Walkthrough.",
+          "downloadURL": "https://github.com/BzmHD/Homelabarr/releases/download/v1.1.0/Homelabarr-v1.1.0-unsigned.ipa",
+          "size": 13545291,
+          "minOSVersion": "15.0"
+        },
+        {
           "version": "1.0.0",
           "date": "2026-11-23",
           "localizedDescription": "Initial public blank-slate release with native Prowlarr Interactive Search, live Quality Profile & Blocklist verification, 4 live themes with matching iOS app icons, smart release age formatting, and guided First-Time Setup Walkthrough.",
