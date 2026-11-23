@@ -1,0 +1,36 @@
+{
+  "name": "Homelabarr",
+  "subtitle": "Self-hosted *arr media manager with native Prowlarr Interactive Search",
+  "description": "Homelabarr is a custom iOS fork of LunaSea featuring native Prowlarr Interactive Search inside Radarr & Sonarr, live Quality Profile & Blocklist verification, 4 live themes with matching native iOS alternate app icons, and a guided First-Time Setup Walkthrough.",
+  "website": "https://github.com/BzmHD/Homelabarr",
+  "tintColor": "#3B4E43",
+  "apps": [
+    {
+      "name": "Homelabarr",
+      "bundleIdentifier": "com.homelabarr.app",
+      "developerName": "Homelabarr",
+      "subtitle": "Self-hosted *arr companion with Prowlarr Interactive Search",
+      "localizedDescription": "Manage Radarr, Sonarr, Prowlarr, NZBGet, SABnzbd, Lidarr, Tautulli, and Overseerr from a clean, themeable iOS app.\n\n• Inline Prowlarr Interactive Search inside Radarr & Sonarr\n• Live Quality Profile & Blocklist checking with automatic sorting\n• Smart release age display (hours/minutes when under 1 day)\n• 4 live themes (Forest Sage, Midnight Ocean, Obsidian Gold, Crimson Noir) with matching native iOS alternate app icons\n• Guided First-Time Setup Walkthrough with Skip on every step\n• 100% local, zero telemetry, GPL-3.0 open source",
+      "iconURL": "https://raw.githubusercontent.com/BzmHD/Homelabarr/main/lunasea/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png",
+      "tintColor": "#3B4E43",
+      "category": "utilities",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "date": "2026-11-23",
+          "localizedDescription": "Initial public blank-slate release with native Prowlarr Interactive Search, live Quality Profile & Blocklist verification, 4 live themes with matching iOS app icons, smart release age formatting, and guided First-Time Setup Walkthrough.",
+          "downloadURL": "https://github.com/BzmHD/Homelabarr/releases/download/v1.0.0/Homelabarr-v1.0.0-unsigned.ipa",
+          "size": 13369934,
+          "minOSVersion": "15.0"
+        }
+      ],
+      "appPermissions": {
+        "entitlements": [],
+        "privacy": {
+          "NSLocalNetworkUsageDescription": "Homelabarr connects to your self-hosted media servers on your local network."
+        }
+      }
+    }
+  ],
+  "news": []
+}
