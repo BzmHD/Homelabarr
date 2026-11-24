@@ -2,7 +2,7 @@
 
 > **Fork Notice:** Homelabarr is an independent fork of **[LunaSea](https://github.com/CometTools/LunaSea)** by [Jagandeep Brar (CometTools)](https://github.com/CometTools), licensed under **GPL-3.0**.
 
-**Homelabarr** is an all-in-one, self-hosted iOS app (**iOS 26+**) for managing your `*arr` stack, Usenet & Torrent downloaders, indexers, requests, and subtitles — completely local with zero telemetry.
+**Homelabarr** is an all-in-one, self-hosted **iOS (26+) & Android (7.0+)** app for managing your `*arr` stack, Usenet & Torrent downloaders, indexers, requests, and subtitles — completely local with zero telemetry.
 
 > See [CHANGELOG.md](CHANGELOG.md) for version history.
 
@@ -35,9 +35,15 @@
 
 ---
 
-## Installation (iOS 26+)
+## Installation
 
-Homelabarr is distributed as an unsigned `.ipa` for sideloading.
+### Android (Android 7.0+) — Direct APK *(No Re-Signing Needed)*
+1. Download `Homelabarr-v1.2.0-android.apk` from the [Releases](../../releases) page on your Android device.
+2. Tap the downloaded `.apk` to install (allow **Install unknown apps** if prompted).
+
+### iOS (iOS 26+)
+
+Homelabarr for iOS is distributed as an unsigned `.ipa` for sideloading.
 
 ### Option 1: SideStore *(Recommended — Auto-Refreshes Over Wi-Fi)*
 1. Install [SideStore](https://sidestore.io) on your iPhone.

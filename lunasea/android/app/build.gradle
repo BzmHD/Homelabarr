@@ -46,7 +46,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "app.lunasea.lunasea"
+        applicationId "com.homelabarr.app"
         minSdkVersion 24
         targetSdkVersion 35
         versionCode flutterVersionCode.toInteger()
@@ -68,7 +68,7 @@ android {
         versionNameSuffix "-dev"
       }
       release {
-        signingConfig signingConfigs.release
+        signingConfig keystorePropertiesFile.exists() ? signingConfigs.release : signingConfigs.debug
       }
     }
 }

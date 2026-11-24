@@ -21,6 +21,8 @@ Homelabarr is a fork of [CometTools/LunaSea](https://github.com/CometTools/LunaS
   - Top-bar search icon on the Dashboard querying **Radarr**, **Sonarr**, **Readarr**, **Overseerr**, and **Prowlarr** simultaneously with source filter chips and 1-tap Add, Request, or Download.
 - **Full Backup & Restore:**
   - Export/share a single `.json` backup (or copy to clipboard) covering all connected apps, Theme, and Dashboard Layout — and restore from file or clipboard in seconds.
+- **Android Build (`Homelabarr-v1.2.0-android.apk`):**
+  - Native Android release APK (`com.homelabarr.app`, Android 7.0+) with custom Homelabarr launcher icons and direct install support.
 
 ---
 
