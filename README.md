@@ -39,7 +39,7 @@ Homelabarr is distributed as an unsigned `.ipa` for sideloading.
 1. Install [SideStore](https://sidestore.io) on your iPhone.
 2. Add this repository's source URL in SideStore:
    ```
-   https://raw.githubusercontent.com/BzmHD/Homelabarr/main/altstore-source.json
+   https://raw.githubusercontent.com/nachocheese1100/Homelabarr/main/altstore-source.json
    ```
    *(Or download `Homelabarr-v1.1.0-unsigned.ipa` directly from [Releases](../../releases) and import it into SideStore.)*
 3. SideStore automatically refreshes the 7-day signature over Wi-Fi without needing a computer.
@@ -52,7 +52,7 @@ Homelabarr is distributed as an unsigned `.ipa` for sideloading.
 Requires **Flutter 3.29.3** (Dart 3.7.2), **CocoaPods**, and **Xcode**.
 
 ```bash
-git clone https://github.com/BzmHD/Homelabarr.git
+git clone https://github.com/nachocheese1100/Homelabarr.git
 cd Homelabarr/lunasea
 flutter pub get
 cd ios && pod install && cd ..

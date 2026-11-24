@@ -2,7 +2,7 @@
   "name": "Homelabarr",
   "subtitle": "Self-hosted *arr media manager with native Prowlarr Interactive Search",
   "description": "Homelabarr is a custom iOS fork of LunaSea featuring native Prowlarr Interactive Search inside Radarr & Sonarr, live Quality Profile & Blocklist verification, 4 live themes with matching native iOS alternate app icons, and a guided First-Time Setup Walkthrough.",
-  "website": "https://github.com/BzmHD/Homelabarr",
+  "website": "https://github.com/nachocheese1100/Homelabarr",
   "tintColor": "#3B4E43",
   "apps": [
     {
@@ -11,7 +11,7 @@
       "developerName": "Homelabarr",
       "subtitle": "Self-hosted *arr companion with Prowlarr Interactive Search",
       "localizedDescription": "Manage Radarr, Sonarr, Prowlarr, NZBGet, SABnzbd, Lidarr, Tautulli, and Overseerr from a clean, themeable iOS app.\n\n• Inline Prowlarr Interactive Search inside Radarr & Sonarr\n• Live Quality Profile & Blocklist checking with automatic sorting\n• Smart release age display (hours/minutes when under 1 day)\n• 4 live themes (Forest Sage, Midnight Ocean, Obsidian Gold, Crimson Noir) with matching native iOS alternate app icons\n• Guided First-Time Setup Walkthrough with Skip on every step\n• 100% local, zero telemetry, GPL-3.0 open source",
-      "iconURL": "https://raw.githubusercontent.com/BzmHD/Homelabarr/main/lunasea/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png",
+      "iconURL": "https://raw.githubusercontent.com/nachocheese1100/Homelabarr/main/lunasea/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png",
       "tintColor": "#3B4E43",
       "category": "utilities",
       "versions": [
@@ -19,7 +19,7 @@
           "version": "1.1.0",
           "date": "2026-11-23",
           "localizedDescription": "Adds qBittorrent, Transmission & Deluge torrent clients, multi-downloader Prowlarr Search (NZBGet/SABnzbd/Torrents), Overseerr/Jellyseerr, standalone Prowlarr, Bazarr with Search All Missing, 4 Dashboard layouts (Stacked, 2-Col Grid, 3-Col Grid, Grouped), and usage-grouped Setup Walkthrough.",
-          "downloadURL": "https://github.com/BzmHD/Homelabarr/releases/download/v1.1.0/Homelabarr-v1.1.0-unsigned.ipa",
+          "downloadURL": "https://github.com/nachocheese1100/Homelabarr/releases/download/v1.1.0/Homelabarr-v1.1.0-unsigned.ipa",
           "size": 13545291,
           "minOSVersion": "26.0"
         },
@@ -27,7 +27,7 @@
           "version": "1.0.0",
           "date": "2026-11-23",
           "localizedDescription": "Initial public blank-slate release with native Prowlarr Interactive Search, live Quality Profile & Blocklist verification, 4 live themes with matching iOS app icons, smart release age formatting, and guided First-Time Setup Walkthrough.",
-          "downloadURL": "https://github.com/BzmHD/Homelabarr/releases/download/v1.0.0/Homelabarr-v1.0.0-unsigned.ipa",
+          "downloadURL": "https://github.com/nachocheese1100/Homelabarr/releases/download/v1.0.0/Homelabarr-v1.0.0-unsigned.ipa",
           "size": 13369934,
           "minOSVersion": "26.0"
         }
