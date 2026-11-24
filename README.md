@@ -72,6 +72,11 @@ In Xcode:
 
 ---
 
+## AI-Assisted Development Disclosure
+Custom features, themes, icons, and documentation added on top of upstream LunaSea were developed with AI assistance using **Google Antigravity** (powered by **Google Gemini**), and reviewed and tested directly on iOS hardware.
+
+---
+
 ## Attribution & License
 
 Homelabarr is a fork of **[CometTools/LunaSea](https://github.com/CometTools/LunaSea)** (originally created by Jagandeep Brar / CometTools) and is licensed under the **GNU General Public License v3.0 (GPL-3.0)**.
