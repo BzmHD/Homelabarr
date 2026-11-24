@@ -6,6 +6,24 @@ Homelabarr is a fork of [CometTools/LunaSea](https://github.com/CometTools/LunaS
 
 ---
 
+## [v1.2.0] — 2026-11-24
+
+### Added
+- **Readarr Module (eBooks & Audiobooks):**
+  - **Library**, **Missing** (+ **Search All Missing Books**), and **Add Book** tabs.
+  - Format badges on every book showing what Readarr is looking for (e.g., `eBook (EPUB)` vs. `Spoken (MP3, M4B, FLAC)`).
+  - Tap any book to switch between **eBook** and **Audiobook (Spoken)** quality profiles, toggle Monitored, run **Auto Search**, **Interactive Release Search**, or **Direct Prowlarr Search**.
+  - Format picker sheet when adding new books.
+- **Live Dashboard Status & Unified "Now Downloading" Strip:**
+  - Real-time status badges on every Dashboard tile across all 4 layouts (`Online`, `Offline`, live download speed, queued/pending/missing/wanted counts) with pull-to-refresh.
+  - Combined **Now Downloading** bar at the top of the Dashboard with live aggregate speed and 1-tap Pause/Resume.
+- **Global "Search Everything":**
+  - Top-bar search icon on the Dashboard querying **Radarr**, **Sonarr**, **Readarr**, **Overseerr**, and **Prowlarr** simultaneously with source filter chips and 1-tap Add, Request, or Download.
+- **Full Backup & Restore:**
+  - Export/share a single `.json` backup (or copy to clipboard) covering all connected apps, Theme, and Dashboard Layout — and restore from file or clipboard in seconds.
+
+---
+
 ## [v1.1.0] — 2026-11-23
 
 ### Added

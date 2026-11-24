@@ -6,6 +6,7 @@ import 'package:lunasea/modules/homelabarr_dev/torrents_route.dart';
 import 'package:lunasea/modules/homelabarr_dev/overseerr_route.dart';
 import 'package:lunasea/modules/homelabarr_dev/prowlarr_route.dart';
 import 'package:lunasea/modules/homelabarr_dev/bazarr_route.dart';
+import 'package:lunasea/modules/homelabarr_dev/readarr_route.dart';
 import 'package:lunasea/modules/homelabarr_dev/dev_settings_route.dart';
 
 class LunaDrawer extends StatelessWidget {
@@ -215,6 +216,17 @@ class LunaDrawer extends StatelessWidget {
           onTap: () => _openCustomRoute(
             context,
             (_) => const BazarrRoute(),
+          ),
+        ),
+      if (HomelabarrDevConfig.readarrEnabled)
+        _buildCustomEntry(
+          context: context,
+          keyName: 'readarr',
+          title: 'Readarr',
+          icon: Icons.menu_book_rounded,
+          onTap: () => _openCustomRoute(
+            context,
+            (_) => const ReadarrRoute(),
           ),
         ),
     ];

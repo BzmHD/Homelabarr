@@ -96,6 +96,20 @@ class HomelabarrDevConfig {
   static String get bazarrApiKey => (_read('HL_BAZARR_KEY', '') ?? '').toString();
   static set bazarrApiKey(String v) => _write('HL_BAZARR_KEY', v.trim());
 
+  // --- Readarr ---
+  static bool get readarrEnabled => _read('HL_READARR_ENABLED', false) == true;
+  static set readarrEnabled(bool v) => _write('HL_READARR_ENABLED', v);
+
+  static String get readarrHost {
+    return (_read('HL_READARR_HOST', '') ?? '').toString().trim();
+  }
+  static set readarrHost(String v) => _write('HL_READARR_HOST', v.trim());
+
+  static String get readarrApiKey {
+    return (_read('HL_READARR_KEY', '') ?? '').toString().trim();
+  }
+  static set readarrApiKey(String v) => _write('HL_READARR_KEY', v.trim());
+
   // --- Dashboard Layout ('stacked' | 'grid2' | 'grid3' | 'grouped') ---
   static String get dashboardLayout => (_read('HL_DASHBOARD_LAYOUT', 'stacked') ?? 'stacked').toString();
   static set dashboardLayout(String v) => _write('HL_DASHBOARD_LAYOUT', v);
@@ -125,7 +139,8 @@ class HomelabarrDevConfig {
       delugeEnabled ||
       overseerrEnabled ||
       prowlarrEnabled ||
-      bazarrEnabled;
+      bazarrEnabled ||
+      readarrEnabled;
 
   static String normalizeBaseUrl(String raw) {
     var u = raw.trim();

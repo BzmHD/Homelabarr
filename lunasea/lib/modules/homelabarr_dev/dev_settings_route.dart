@@ -55,6 +55,11 @@ class _HomelabarrDevSettingsRouteState extends State<HomelabarrDevSettingsRoute>
   final _bazarrHost = TextEditingController(text: HomelabarrDevConfig.bazarrHost);
   final _bazarrKey = TextEditingController(text: HomelabarrDevConfig.bazarrApiKey);
 
+  // Readarr
+  bool _readarrEnabled = HomelabarrDevConfig.readarrEnabled;
+  final _readarrHost = TextEditingController(text: HomelabarrDevConfig.readarrHost);
+  final _readarrKey = TextEditingController(text: HomelabarrDevConfig.readarrApiKey);
+
   @override
   void initState() {
     super.initState();
@@ -74,6 +79,7 @@ class _HomelabarrDevSettingsRouteState extends State<HomelabarrDevSettingsRoute>
       _overseerrHost, _overseerrKey,
       _prowlarrHost, _prowlarrKey,
       _bazarrHost, _bazarrKey,
+      _readarrHost, _readarrKey,
     ]) {
       c.dispose();
     }
@@ -113,6 +119,10 @@ class _HomelabarrDevSettingsRouteState extends State<HomelabarrDevSettingsRoute>
     HomelabarrDevConfig.bazarrEnabled = _bazarrEnabled;
     HomelabarrDevConfig.bazarrHost = _bazarrHost.text;
     HomelabarrDevConfig.bazarrApiKey = _bazarrKey.text;
+
+    HomelabarrDevConfig.readarrEnabled = _readarrEnabled;
+    HomelabarrDevConfig.readarrHost = _readarrHost.text;
+    HomelabarrDevConfig.readarrApiKey = _readarrKey.text;
 
     if (!silent) {
       showLunaSuccessSnackBar(
@@ -180,6 +190,18 @@ class _HomelabarrDevSettingsRouteState extends State<HomelabarrDevSettingsRoute>
     return 'Bazarr ${inner?['bazarr_version'] ?? 'OK'}';
   }
 
+  Future<String> _testReadarr() async {
+    final base = HomelabarrDevConfig.normalizeBaseUrl(_readarrHost.text);
+    if (base.isEmpty || _readarrKey.text.trim().isEmpty) throw Exception('Enter Host & API Key');
+    final res = await http.get(
+      Uri.parse('$base/api/v1/system/status'),
+      headers: {'X-Api-Key': _readarrKey.text.trim()},
+    ).timeout(const Duration(seconds: 10));
+    if (res.statusCode != 200) throw Exception('HTTP ${res.statusCode}');
+    final d = json.decode(res.body) as Map<String, dynamic>;
+    return 'Readarr ${d['version'] ?? 'OK'}';
+  }
+
   bool _show(String id) => widget.filterApp == null || widget.filterApp == id;
 
   String get _pageTitle {
@@ -196,6 +218,8 @@ class _HomelabarrDevSettingsRouteState extends State<HomelabarrDevSettingsRoute>
         return 'Prowlarr';
       case 'bazarr':
         return 'Bazarr';
+      case 'readarr':
+        return 'Readarr';
       default:
         return 'Configuration';
     }
@@ -349,6 +373,23 @@ class _HomelabarrDevSettingsRouteState extends State<HomelabarrDevSettingsRoute>
               fields: [
                 _field(_bazarrHost, 'Host URL', 'http://192.168.1.x:6767'),
                 _field(_bazarrKey, 'API Key', 'Settings → General → API Key'),
+              ],
+            ),
+          if (_show('readarr'))
+            _serviceCard(
+              title: 'Readarr',
+              subtitle: 'eBooks & Audiobooks library, missing books & lookup',
+              icon: Icons.menu_book_rounded,
+              enabled: _readarrEnabled,
+              initiallyExpanded: isSingle,
+              onToggle: (v) {
+                setState(() => _readarrEnabled = v);
+                HomelabarrDevConfig.readarrEnabled = v;
+              },
+              onTest: () => _runTest('Readarr', _testReadarr),
+              fields: [
+                _field(_readarrHost, 'Host URL', 'http://192.168.1.x:8787'),
+                _field(_readarrKey, 'API Key', 'Settings → General → API Key'),
               ],
             ),
           const SizedBox(height: 16),

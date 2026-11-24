@@ -12,7 +12,7 @@
 
 | Category | Apps Included |
 | --- | --- |
-| **Media Managers (`*arr`)** | **Radarr** (Movies), **Sonarr** (TV Shows), **Lidarr** (Music), **Bazarr** (Subtitles) |
+| **Media Managers (`*arr`)** | **Radarr** (Movies), **Sonarr** (TV Shows), **Lidarr** (Music), **Readarr** (eBooks & Audiobooks), **Bazarr** (Subtitles) |
 | **Indexers & Search** | **Prowlarr** (Inline + Standalone), Newznab Search |
 | **Usenet Downloaders (NZB)** | **NZBGet**, **SABnzbd** |
 | **Torrent Clients (Docker / WebUI)** | **qBittorrent**, **Transmission**, **Deluge** |
@@ -25,6 +25,10 @@
 - **Inline Prowlarr Search:** Search Prowlarr directly inside Radarr & Sonarr with live Quality Profile checks, Blocklist warnings, smart hours/minutes release ages, and 1-tap send to NZBGet, SABnzbd, or your torrent client.
 - **Torrent & Usenet Control:** Manage queues, speeds, pause/resume, delete, and add magnets/URLs across **qBittorrent**, **Transmission**, **Deluge**, **NZBGet**, and **SABnzbd**.
 - **Overseerr, Prowlarr & Bazarr Built In:** Approve/decline/submit requests in Overseerr, run global indexer searches & tests in Prowlarr, and trigger **Search All Missing** subtitles in Bazarr.
+- **Readarr (eBooks & Audiobooks):** Browse library, see target format badges (`eBook` vs `Spoken`), switch formats per author, search missing books, run interactive or direct Prowlarr searches, and choose format when adding new books.
+- **Live Dashboard Status & Now Downloading:** Real-time online/speed/missing/pending badges on every Dashboard tile (across all 4 layouts) + a top **Now Downloading** strip with 1-tap Pause/Resume.
+- **Global "Search Everything":** One Dashboard search bar querying Radarr, Sonarr, Readarr, Overseerr & Prowlarr simultaneously with 1-tap Add, Request, or Download.
+- **Full JSON Backup & Restore:** Export/share or import all connected apps, credentials, theme, and Dashboard layout in one `.json` file.
 - **4 Dashboard Layouts:** Switch live between **Stacked Tiles**, **2-Column Grid**, **3-Column Compact Grid**, and **Grouped by Usage**.
 - **4 Themes & Matching iOS Icons:** Live theme switching (**Forest Sage**, **Midnight Ocean**, **Obsidian Gold**, **Crimson Noir**) with matching Home Screen app icons.
 - **Guided Setup & Instant Sync:** Usage-grouped First-Time Setup Walkthrough with Skip on every step; enabling any app adds it immediately to your Dashboard and Side Bar.
@@ -41,11 +45,11 @@ Homelabarr is distributed as an unsigned `.ipa` for sideloading.
    ```
    https://raw.githubusercontent.com/nachocheese1100/Homelabarr/main/altstore-source.json
    ```
-   *(Or download `Homelabarr-v1.1.0-unsigned.ipa` directly from [Releases](../../releases) and import it into SideStore.)*
+   *(Or download `Homelabarr-v1.2.0-unsigned.ipa` directly from [Releases](../../releases) and import it into SideStore.)*
 3. SideStore automatically refreshes the 7-day signature over Wi-Fi without needing a computer.
 
 ### Option 2: AltStore / Sideloadly
-1. Download `Homelabarr-v1.1.0-unsigned.ipa` from the [Releases](../../releases) page.
+1. Download `Homelabarr-v1.2.0-unsigned.ipa` from the [Releases](../../releases) page.
 2. Install via [AltStore](https://altstore.io) or [Sideloadly](https://sideloadly.io) using your Apple ID.
 
 ### Option 3: Build from Source (Xcode)

@@ -5,6 +5,7 @@ import 'package:lunasea/router/routes/settings.dart';
 import 'package:lunasea/system/quick_actions/quick_actions.dart';
 import 'package:lunasea/utils/profile_tools.dart';
 import 'package:lunasea/modules/homelabarr_dev/dev_settings_route.dart';
+import 'package:lunasea/modules/homelabarr_dev/backup_restore_route.dart';
 
 class ConfigurationRoute extends StatefulWidget {
   const ConfigurationRoute({
@@ -91,6 +92,14 @@ class _State extends State<ConfigurationRoute> with LunaScrollControllerMixin {
             trailing: const LunaIconButton(icon: Icons.rounded_corner_rounded),
             onTap: SettingsRoutes.CONFIGURATION_QUICK_ACTIONS.go,
           ),
+        LunaBlock(
+          title: 'Full Backup & Restore',
+          body: const [TextSpan(text: 'Export or import all Homelabarr apps, theme & layout')],
+          trailing: const LunaIconButton(icon: Icons.backup_rounded),
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const HomelabarrBackupRoute()),
+          ),
+        ),
         LunaDivider(),
         ..._moduleList(),
       ],
@@ -120,6 +129,10 @@ class _State extends State<ConfigurationRoute> with LunaScrollControllerMixin {
       MapEntry(
         'qbittorrent',
         _devAppTile('qBittorrent', 'Configure qBittorrent', Icons.downloading_rounded, 'qbit'),
+      ),
+      MapEntry(
+        'readarr',
+        _devAppTile('Readarr', 'Configure Readarr', Icons.menu_book_rounded, 'readarr'),
       ),
       MapEntry(
         'transmission',

@@ -62,6 +62,10 @@ class _WalkthroughPageState extends State<_WalkthroughPage> {
   late TextEditingController _bazarrHost;
   late TextEditingController _bazarrKey;
 
+  late bool _readarrEnabled;
+  late TextEditingController _readarrHost;
+  late TextEditingController _readarrKey;
+
   // Indexers & Search
   late bool _prowlarrEnabled;
   late TextEditingController _prowlarrHost;
@@ -123,6 +127,10 @@ class _WalkthroughPageState extends State<_WalkthroughPage> {
     _bazarrHost = TextEditingController(text: HomelabarrDevConfig.bazarrHost);
     _bazarrKey = TextEditingController(text: HomelabarrDevConfig.bazarrApiKey);
 
+    _readarrEnabled = HomelabarrDevConfig.readarrEnabled;
+    _readarrHost = TextEditingController(text: HomelabarrDevConfig.readarrHost);
+    _readarrKey = TextEditingController(text: HomelabarrDevConfig.readarrApiKey);
+
     _prowlarrEnabled = HomelabarrDevConfig.prowlarrEnabled;
     _prowlarrHost = TextEditingController(text: ProwlarrConfig.host);
     _prowlarrKey = TextEditingController(text: ProwlarrConfig.apiKey);
@@ -167,6 +175,7 @@ class _WalkthroughPageState extends State<_WalkthroughPage> {
       _radarrHost, _radarrKey,
       _lidarrHost, _lidarrKey,
       _bazarrHost, _bazarrKey,
+      _readarrHost, _readarrKey,
       _prowlarrHost, _prowlarrKey,
       _nzbgetHost, _nzbgetUser, _nzbgetPass,
       _sabHost, _sabKey,
@@ -204,6 +213,10 @@ class _WalkthroughPageState extends State<_WalkthroughPage> {
       HomelabarrDevConfig.bazarrEnabled = _bazarrEnabled;
       HomelabarrDevConfig.bazarrHost = _bazarrHost.text.trim();
       HomelabarrDevConfig.bazarrApiKey = _bazarrKey.text.trim();
+
+      HomelabarrDevConfig.readarrEnabled = _readarrEnabled;
+      HomelabarrDevConfig.readarrHost = _readarrHost.text.trim();
+      HomelabarrDevConfig.readarrApiKey = _readarrKey.text.trim();
 
       if (mounted) {
         context.read<SonarrState>().reset();
@@ -504,6 +517,17 @@ class _WalkthroughPageState extends State<_WalkthroughPage> {
                 _field('Bazarr API Key', _bazarrKey),
               ],
             ),
+            _appToggleCard(
+              title: 'Readarr',
+              subtitle: 'eBooks & Audiobooks library, missing & lookup',
+              icon: Icons.menu_book_rounded,
+              enabled: _readarrEnabled,
+              onToggle: (v) => setState(() => _readarrEnabled = v),
+              fields: [
+                _field('Readarr Host URL', _readarrHost, hint: 'http://192.168.1.x:8787'),
+                _field('Readarr API Key', _readarrKey),
+              ],
+            ),
           ],
         );
 
@@ -667,6 +691,7 @@ class _WalkthroughPageState extends State<_WalkthroughPage> {
               if (_radarrEnabled) 'Radarr',
               if (_lidarrEnabled) 'Lidarr',
               if (_bazarrEnabled) 'Bazarr',
+              if (_readarrEnabled) 'Readarr',
             ]),
             _summaryGroup('Indexers & Search', [
               if (_prowlarrEnabled) 'Prowlarr',

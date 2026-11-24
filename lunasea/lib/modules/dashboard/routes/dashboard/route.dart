@@ -10,6 +10,7 @@ import 'package:lunasea/modules/dashboard/routes/dashboard/widgets/switch_view_a
 import 'package:lunasea/modules/dashboard/routes/dashboard/widgets/navigation_bar.dart';
 import 'package:lunasea/widgets/sheets/onboarding/walkthrough.dart';
 import 'package:lunasea/modules/homelabarr_dev/dev_config.dart';
+import 'package:lunasea/modules/homelabarr_dev/global_search_route.dart';
 
 class DashboardRoute extends StatefulWidget {
   const DashboardRoute({
@@ -55,6 +56,12 @@ class _State extends State<DashboardRoute> {
       scrollControllers: HomeNavigationBar.scrollControllers,
       pageController: _pageController,
       actions: [
+        LunaIconButton.appBar(
+          icon: Icons.search_rounded,
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const GlobalSearchRoute()),
+          ),
+        ),
         ValueListenableBuilder<int>(
           valueListenable: HomelabarrDevConfig.revision,
           builder: (context, _, __) {
