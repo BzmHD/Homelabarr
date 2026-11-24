@@ -46,7 +46,7 @@
 ## Installation
 
 ### Android (Android 7.0+ / API 24+) — Direct APK *(No Re-Signing Needed)*
-1. Download `Homelabarr-v1.2.0-android.apk` from the [Releases](../../releases) page on your Android device.
+1. Download `Homelabarr-v1.2.1-android.apk` from the [Releases](../../releases) page on your Android device.
 2. Tap the downloaded `.apk` to install (allow **Install unknown apps** if prompted).
 
 ### iOS (iOS 26+)
@@ -59,11 +59,11 @@ Homelabarr for iOS is distributed as an unsigned `.ipa` for sideloading.
    ```
    https://raw.githubusercontent.com/nachocheese1100/Homelabarr/main/altstore-source.json
    ```
-   *(Or download `Homelabarr-v1.2.0-unsigned.ipa` directly from [Releases](../../releases) and import it into SideStore.)*
+   *(Or download `Homelabarr-v1.2.1-unsigned.ipa` directly from [Releases](../../releases) and import it into SideStore.)*
 3. SideStore automatically refreshes the 7-day signature over Wi-Fi without needing a computer.
 
 #### Option 2: AltStore / Sideloadly
-1. Download `Homelabarr-v1.2.0-unsigned.ipa` from the [Releases](../../releases) page.
+1. Download `Homelabarr-v1.2.1-unsigned.ipa` from the [Releases](../../releases) page.
 2. Install via [AltStore](https://altstore.io) or [Sideloadly](https://sideloadly.io) using your Apple ID.
 
 #### Option 3: Build from Source (Xcode / Android SDK)

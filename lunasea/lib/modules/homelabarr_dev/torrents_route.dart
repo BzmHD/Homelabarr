@@ -17,6 +17,7 @@ class _TorrentsRouteState extends State<TorrentsRoute> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String? _selectedClient;
   bool _loading = false;
+  int _fetchSeq = 0;
   String? _error;
   TorrentClientStats? _stats;
 
@@ -60,6 +61,7 @@ class _TorrentsRouteState extends State<TorrentsRoute> {
   Future<void> _refresh() async {
     final client = _selectedClient;
     if (client == null) return;
+    final seq = ++_fetchSeq;
     setState(() {
       _loading = true;
       _error = null;
@@ -73,14 +75,14 @@ class _TorrentsRouteState extends State<TorrentsRoute> {
       } else {
         stats = await DownloadClientsApi.fetchDeluge();
       }
-      if (mounted) {
+      if (mounted && seq == _fetchSeq && client == _selectedClient) {
         setState(() {
           _stats = stats;
           _loading = false;
         });
       }
     } catch (e) {
-      if (mounted) {
+      if (mounted && seq == _fetchSeq && client == _selectedClient) {
         setState(() {
           _error = e.toString();
           _loading = false;
@@ -105,46 +107,50 @@ class _TorrentsRouteState extends State<TorrentsRoute> {
     final client = _selectedClient;
     if (client == null) return;
     final ctrl = TextEditingController();
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: Theme.of(context).primaryColor,
-        title: Text('Add Torrent to $client', style: const TextStyle(color: Colors.white)),
-        content: TextField(
-          controller: ctrl,
-          style: const TextStyle(color: Colors.white),
-          decoration: const InputDecoration(
-            hintText: 'Paste magnet:? or .torrent URL',
-            hintStyle: TextStyle(color: Colors.white54),
+    try {
+      final ok = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          backgroundColor: Theme.of(context).primaryColor,
+          title: Text('Add Torrent to $client', style: const TextStyle(color: Colors.white)),
+          content: TextField(
+            controller: ctrl,
+            style: const TextStyle(color: Colors.white),
+            decoration: const InputDecoration(
+              hintText: 'Paste magnet:? or .torrent URL',
+              hintStyle: TextStyle(color: Colors.white54),
+            ),
+            autofocus: true,
           ),
-          autofocus: true,
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(false),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(true),
+              child: Text('Add', style: TextStyle(color: LunaColours.accent, fontWeight: FontWeight.bold)),
+            ),
+          ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(true),
-            child: Text('Add', style: TextStyle(color: LunaColours.accent, fontWeight: FontWeight.bold)),
-          ),
-        ],
-      ),
-    );
-    if (ok == true && ctrl.text.trim().isNotEmpty) {
-      try {
-        if (client == 'qBittorrent') {
-          await DownloadClientsApi.addToQBittorrent(ctrl.text.trim());
-        } else if (client == 'Transmission') {
-          await DownloadClientsApi.addToTransmission(ctrl.text.trim());
-        } else {
-          await DownloadClientsApi.addToDeluge(ctrl.text.trim());
+      );
+      if (ok == true && ctrl.text.trim().isNotEmpty) {
+        try {
+          if (client == 'qBittorrent') {
+            await DownloadClientsApi.addToQBittorrent(ctrl.text.trim());
+          } else if (client == 'Transmission') {
+            await DownloadClientsApi.addToTransmission(ctrl.text.trim());
+          } else {
+            await DownloadClientsApi.addToDeluge(ctrl.text.trim());
+          }
+          showLunaSuccessSnackBar(title: 'Torrent Added', message: 'Sent to $client');
+          _refresh();
+        } catch (e) {
+          showLunaErrorSnackBar(title: 'Add Failed', message: e.toString());
         }
-        showLunaSuccessSnackBar(title: 'Torrent Added', message: 'Sent to $client');
-        _refresh();
-      } catch (e) {
-        showLunaErrorSnackBar(title: 'Add Failed', message: e.toString());
       }
+    } finally {
+      ctrl.dispose();
     }
   }
 

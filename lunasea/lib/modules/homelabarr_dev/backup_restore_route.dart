@@ -6,6 +6,12 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:lunasea/core.dart';
 import 'package:lunasea/modules/homelabarr_dev/dev_config.dart';
+import 'package:lunasea/modules/lidarr.dart';
+import 'package:lunasea/modules/nzbget.dart';
+import 'package:lunasea/modules/radarr.dart';
+import 'package:lunasea/modules/sabnzbd.dart';
+import 'package:lunasea/modules/sonarr.dart';
+import 'package:lunasea/modules/tautulli.dart';
 import 'package:lunasea/widgets/sheets/prowlarr_search/sheet.dart';
 import 'package:lunasea/widgets/ui/homelabarr_themes.dart';
 
@@ -80,15 +86,23 @@ class _HomelabarrBackupRouteState extends State<HomelabarrBackupRoute> {
   }
 
   Future<void> _exportFile() async {
+    File? file;
     try {
       final jsonStr = const JsonEncoder.withIndent('  ').convert(_buildBackupPayload());
       final dir = await getTemporaryDirectory();
-      final ts = DateTime.now().toIso8601String().split('T').first;
-      final file = File('${dir.path}/homelabarr-backup-$ts.json');
+      final now = DateTime.now();
+      final ts = '${now.year.toString().padLeft(4, '0')}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}-${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}${now.second.toString().padLeft(2, '0')}';
+      file = File('${dir.path}/homelabarr-backup-$ts.json');
       await file.writeAsString(jsonStr);
       await Share.shareXFiles([XFile(file.path)], subject: 'Homelabarr Backup ($ts)');
     } catch (e) {
       showLunaErrorSnackBar(title: 'Export Failed', message: e.toString());
+    } finally {
+      if (file != null && await file.exists()) {
+        try {
+          await file.delete();
+        } catch (_) {}
+      }
     }
   }
 
@@ -101,11 +115,35 @@ class _HomelabarrBackupRouteState extends State<HomelabarrBackupRoute> {
     );
   }
 
+  Future<bool> _confirmRestore() async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Theme.of(context).primaryColor,
+        title: const Text('Restore Backup?', style: TextStyle(color: Colors.white)),
+        content: const Text(
+          'This will overwrite your active profile hosts, API keys, Theme, and Dashboard Layout with the backup contents.',
+          style: TextStyle(color: Colors.white70, fontSize: 13.5),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text('Restore', style: TextStyle(color: LunaColours.orange, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+    return ok == true;
+  }
+
   Future<void> _applyBackupJson(String rawJson) async {
-    final data = json.decode(rawJson) as Map<String, dynamic>;
-    if (data['app'] != 'Homelabarr') {
+    final decoded = json.decode(rawJson);
+    if (decoded is! Map<String, dynamic> || decoded['app'] != 'Homelabarr') {
       throw Exception('Not a valid Homelabarr backup file');
     }
+    if (!await _confirmRestore()) return;
+    final data = decoded;
 
     final ui = (data['ui'] as Map<String, dynamic>?) ?? {};
     if (ui['theme'] is String) {
@@ -178,6 +216,14 @@ class _HomelabarrBackupRouteState extends State<HomelabarrBackupRoute> {
     HomelabarrDevConfig.readarrApiKey = (apps['readarrApiKey'] ?? '').toString();
 
     HomelabarrDevConfig.notify();
+    if (mounted) {
+      context.read<RadarrState>().reset();
+      context.read<SonarrState>().reset();
+      context.read<LidarrState>().reset();
+      context.read<NZBGetState>().reset();
+      context.read<SABnzbdState>().reset();
+      context.read<TautulliState>().reset();
+    }
     showLunaSuccessSnackBar(
       title: 'Backup Restored',
       message: 'All apps, credentials, theme & layout restored!',

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:lunasea/core.dart';
@@ -20,6 +19,7 @@ class _OverseerrRouteState extends State<OverseerrRoute> with SingleTickerProvid
   bool _loadingRequests = false;
   bool _loadingTrending = false;
   bool _searching = false;
+  final Set<String> _busyKeys = {};
   String? _error;
 
   List<Map<String, dynamic>> _requests = [];
@@ -135,6 +135,9 @@ class _OverseerrRouteState extends State<OverseerrRoute> with SingleTickerProvid
   Future<void> _requestMedia(Map<String, dynamic> item) async {
     final mediaType = (item['mediaType'] ?? 'movie').toString();
     final id = item['id'];
+    final key = 'req:$mediaType:$id';
+    if (_busyKeys.contains(key)) return;
+    _busyKeys.add(key);
     final title = (item['title'] ?? item['name'] ?? 'Title').toString();
     try {
       final payload = <String, dynamic>{
@@ -153,10 +156,15 @@ class _OverseerrRouteState extends State<OverseerrRoute> with SingleTickerProvid
       }
     } catch (e) {
       showLunaErrorSnackBar(title: 'Request Failed', message: e.toString());
+    } finally {
+      _busyKeys.remove(key);
     }
   }
 
   Future<void> _updateRequest(int requestId, String action) async {
+    final key = 'upd:$requestId:$action';
+    if (_busyKeys.contains(key)) return;
+    _busyKeys.add(key);
     try {
       http.Response res;
       if (action == 'delete') {
@@ -177,6 +185,8 @@ class _OverseerrRouteState extends State<OverseerrRoute> with SingleTickerProvid
       }
     } catch (e) {
       showLunaErrorSnackBar(title: 'Action Failed', message: e.toString());
+    } finally {
+      _busyKeys.remove(key);
     }
   }
 

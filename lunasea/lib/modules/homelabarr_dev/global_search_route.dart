@@ -30,12 +30,15 @@ class GlobalSearchRoute extends StatefulWidget {
 }
 
 class _GlobalSearchRouteState extends State<GlobalSearchRoute> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController _ctrl = TextEditingController();
   bool _searching = false;
+  int _searchSeq = 0;
+  final Set<String> _busyKeys = {};
   String _selectedFilter = 'All';
   List<_GlobalResult> _results = [];
 
-  static const _timeout = Duration(seconds: 20);
+  static const _timeout = Duration(seconds: 15);
   static const _filters = ['All', 'Radarr', 'Sonarr', 'Readarr', 'Overseerr', 'Prowlarr'];
 
   @override
@@ -47,6 +50,7 @@ class _GlobalSearchRouteState extends State<GlobalSearchRoute> {
   Future<void> _searchAll(String query) async {
     final q = query.trim();
     if (q.isEmpty) return;
+    final seq = ++_searchSeq;
     setState(() {
       _searching = true;
       _results = [];
@@ -77,7 +81,7 @@ class _GlobalSearchRouteState extends State<GlobalSearchRoute> {
     }
 
     await Future.wait(tasks);
-    if (mounted) {
+    if (mounted && seq == _searchSeq) {
       setState(() {
         _results = found;
         _searching = false;
@@ -212,7 +216,20 @@ class _GlobalSearchRouteState extends State<GlobalSearchRoute> {
     }
   }
 
+  String _itemKey(_GlobalResult item) => '${item.source}:${item.title}:${item.raw['id'] ?? item.raw['guid'] ?? ''}';
+
+  Future<List<dynamic>> _fetchJsonList(String url, Map<String, String> headers, String label) async {
+    final res = await http.get(Uri.parse(url), headers: headers).timeout(_timeout);
+    if (res.statusCode != 200) throw Exception('$label failed (HTTP ${res.statusCode})');
+    final decoded = json.decode(res.body);
+    if (decoded is! List) throw Exception('Unexpected $label response');
+    return decoded;
+  }
+
   Future<void> _handleAction(_GlobalResult item) async {
+    final key = _itemKey(item);
+    if (_busyKeys.contains(key)) return;
+    setState(() => _busyKeys.add(key));
     final p = LunaProfile.current;
     try {
       if (item.source == 'Prowlarr') {
@@ -235,15 +252,17 @@ class _GlobalSearchRouteState extends State<GlobalSearchRoute> {
       if (item.source == 'Overseerr') {
         final base = HomelabarrDevConfig.normalizeBaseUrl(HomelabarrDevConfig.overseerrHost);
         final mediaType = (item.raw['mediaType'] ?? 'movie').toString();
-        final res = await http.post(
-          Uri.parse('$base/api/v1/request'),
-          headers: {'X-Api-Key': HomelabarrDevConfig.overseerrApiKey, 'Content-Type': 'application/json'},
-          body: json.encode({
-            'mediaType': mediaType,
-            'mediaId': item.raw['id'],
-            if (mediaType == 'tv') 'seasons': 'all',
-          }),
-        );
+        final res = await http
+            .post(
+              Uri.parse('$base/api/v1/request'),
+              headers: {'X-Api-Key': HomelabarrDevConfig.overseerrApiKey, 'Content-Type': 'application/json'},
+              body: json.encode({
+                'mediaType': mediaType,
+                'mediaId': item.raw['id'],
+                if (mediaType == 'tv') 'seasons': 'all',
+              }),
+            )
+            .timeout(_timeout);
         if (res.statusCode == 200 || res.statusCode == 201) {
           showLunaSuccessSnackBar(title: 'Requested in Overseerr', message: item.title);
         } else {
@@ -255,14 +274,22 @@ class _GlobalSearchRouteState extends State<GlobalSearchRoute> {
       if (item.source == 'Radarr') {
         final base = HomelabarrDevConfig.normalizeBaseUrl(p.radarrHost);
         final headers = {'X-Api-Key': p.radarrKey, 'Content-Type': 'application/json'};
-        final rf = json.decode((await http.get(Uri.parse('$base/api/v3/rootfolder'), headers: headers)).body) as List;
-        final qp = json.decode((await http.get(Uri.parse('$base/api/v3/qualityprofile'), headers: headers)).body) as List;
+        final meta = await Future.wait([
+          _fetchJsonList('$base/api/v3/rootfolder', headers, 'Radarr root folders'),
+          _fetchJsonList('$base/api/v3/qualityprofile', headers, 'Radarr quality profiles'),
+        ]);
+        final rf = meta[0];
+        final qp = meta[1];
+        if (rf.isEmpty) throw Exception('No Root Folder configured in Radarr');
+        if (qp.isEmpty) throw Exception('No Quality Profile configured in Radarr');
         final payload = Map<String, dynamic>.from(item.raw);
         payload['rootFolderPath'] = (rf.first as Map)['path'];
         payload['qualityProfileId'] = (qp.first as Map)['id'];
         payload['monitored'] = true;
         payload['addOptions'] = {'searchForMovie': true};
-        final res = await http.post(Uri.parse('$base/api/v3/movie'), headers: headers, body: json.encode(payload));
+        final res = await http
+            .post(Uri.parse('$base/api/v3/movie'), headers: headers, body: json.encode(payload))
+            .timeout(_timeout);
         if (res.statusCode == 200 || res.statusCode == 201) {
           showLunaSuccessSnackBar(title: 'Added to Radarr', message: item.title);
         } else {
@@ -274,14 +301,22 @@ class _GlobalSearchRouteState extends State<GlobalSearchRoute> {
       if (item.source == 'Sonarr') {
         final base = HomelabarrDevConfig.normalizeBaseUrl(p.sonarrHost);
         final headers = {'X-Api-Key': p.sonarrKey, 'Content-Type': 'application/json'};
-        final rf = json.decode((await http.get(Uri.parse('$base/api/v3/rootfolder'), headers: headers)).body) as List;
-        final qp = json.decode((await http.get(Uri.parse('$base/api/v3/qualityprofile'), headers: headers)).body) as List;
+        final meta = await Future.wait([
+          _fetchJsonList('$base/api/v3/rootfolder', headers, 'Sonarr root folders'),
+          _fetchJsonList('$base/api/v3/qualityprofile', headers, 'Sonarr quality profiles'),
+        ]);
+        final rf = meta[0];
+        final qp = meta[1];
+        if (rf.isEmpty) throw Exception('No Root Folder configured in Sonarr');
+        if (qp.isEmpty) throw Exception('No Quality Profile configured in Sonarr');
         final payload = Map<String, dynamic>.from(item.raw);
         payload['rootFolderPath'] = (rf.first as Map)['path'];
         payload['qualityProfileId'] = (qp.first as Map)['id'];
         payload['monitored'] = true;
         payload['addOptions'] = {'searchForMissingEpisodes': true};
-        final res = await http.post(Uri.parse('$base/api/v3/series'), headers: headers, body: json.encode(payload));
+        final res = await http
+            .post(Uri.parse('$base/api/v3/series'), headers: headers, body: json.encode(payload))
+            .timeout(_timeout);
         if (res.statusCode == 200 || res.statusCode == 201) {
           showLunaSuccessSnackBar(title: 'Added to Sonarr', message: item.title);
         } else {
@@ -293,9 +328,16 @@ class _GlobalSearchRouteState extends State<GlobalSearchRoute> {
       if (item.source == 'Readarr') {
         final base = HomelabarrDevConfig.normalizeBaseUrl(HomelabarrDevConfig.readarrHost);
         final headers = {'X-Api-Key': HomelabarrDevConfig.readarrApiKey, 'Content-Type': 'application/json'};
-        final rf = json.decode((await http.get(Uri.parse('$base/api/v1/rootfolder'), headers: headers)).body) as List;
-        final qp = json.decode((await http.get(Uri.parse('$base/api/v1/qualityprofile'), headers: headers)).body) as List;
-        final mp = json.decode((await http.get(Uri.parse('$base/api/v1/metadataprofile'), headers: headers)).body) as List;
+        final meta = await Future.wait([
+          _fetchJsonList('$base/api/v1/rootfolder', headers, 'Readarr root folders'),
+          _fetchJsonList('$base/api/v1/qualityprofile', headers, 'Readarr quality profiles'),
+          _fetchJsonList('$base/api/v1/metadataprofile', headers, 'Readarr metadata profiles'),
+        ]);
+        final rf = meta[0];
+        final qp = meta[1];
+        final mp = meta[2];
+        if (rf.isEmpty) throw Exception('No Root Folder configured in Readarr');
+        if (qp.isEmpty) throw Exception('No Quality Profile configured in Readarr');
         final payload = Map<String, dynamic>.from(item.raw);
         final author = Map<String, dynamic>.from((item.raw['author'] as Map<String, dynamic>?) ?? {});
         author['rootFolderPath'] = (rf.first as Map)['path'];
@@ -306,7 +348,9 @@ class _GlobalSearchRouteState extends State<GlobalSearchRoute> {
         payload['author'] = author;
         payload['monitored'] = true;
         payload['addOptions'] = {'searchForNewBook': true};
-        final res = await http.post(Uri.parse('$base/api/v1/book'), headers: headers, body: json.encode(payload));
+        final res = await http
+            .post(Uri.parse('$base/api/v1/book'), headers: headers, body: json.encode(payload))
+            .timeout(_timeout);
         if (res.statusCode == 200 || res.statusCode == 201) {
           showLunaSuccessSnackBar(title: 'Added to Readarr', message: item.title);
         } else {
@@ -315,6 +359,8 @@ class _GlobalSearchRouteState extends State<GlobalSearchRoute> {
       }
     } catch (e) {
       showLunaErrorSnackBar(title: '${item.source} Failed', message: e.toString());
+    } finally {
+      if (mounted) setState(() => _busyKeys.remove(key));
     }
   }
 
@@ -325,7 +371,7 @@ class _GlobalSearchRouteState extends State<GlobalSearchRoute> {
         : _results.where((r) => r.source == _selectedFilter).toList();
 
     return LunaScaffold(
-      scaffoldKey: GlobalKey<ScaffoldState>(),
+      scaffoldKey: _scaffoldKey,
       appBar: LunaAppBar(title: 'Search Everything'),
       body: Column(
         children: [

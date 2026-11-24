@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:lunasea/core.dart';
@@ -47,23 +46,39 @@ class TorrentClientStats {
 /// Unified HTTP API clients for qBittorrent, Transmission, Deluge, NZBGet, and SABnzbd.
 class DownloadClientsApi {
   static const _timeout = Duration(seconds: 12);
+  static final Map<String, String> _qbitCookieCache = {};
+  static final Map<String, String> _delugeCookieCache = {};
 
   // ========================== qBittorrent ==========================
-  static Future<String?> _qbitLoginCookie(String base, String user, String pass) async {
+  static Future<String?> _qbitLoginCookie(
+    String base,
+    String user,
+    String pass, {
+    Duration timeout = _timeout,
+    bool forceRefresh = false,
+  }) async {
+    if (!forceRefresh && _qbitCookieCache.containsKey(base)) {
+      return _qbitCookieCache[base];
+    }
     final res = await http
         .post(
           Uri.parse('$base/api/v2/auth/login'),
           body: {'username': user, 'password': pass},
         )
-        .timeout(_timeout);
+        .timeout(timeout);
     if (res.statusCode == 200 && res.body.trim().toLowerCase() == 'ok.') {
       final rawCookie = res.headers['set-cookie'];
       if (rawCookie != null) {
         final match = RegExp(r'SID=[^;]+').firstMatch(rawCookie);
-        if (match != null) return match.group(0);
+        if (match != null) {
+          _qbitCookieCache[base] = match.group(0)!;
+          return match.group(0);
+        }
       }
+      _qbitCookieCache[base] = '';
       return '';
     }
+    _qbitCookieCache.remove(base);
     throw Exception('qBittorrent login failed (HTTP ${res.statusCode})');
   }
 
@@ -74,6 +89,7 @@ class DownloadClientsApi {
       base,
       HomelabarrDevConfig.qbitUser,
       HomelabarrDevConfig.qbitPass,
+      forceRefresh: true,
     );
     final res = await http.get(
       Uri.parse('$base/api/v2/app/version'),
@@ -83,17 +99,31 @@ class DownloadClientsApi {
     throw Exception('HTTP ${res.statusCode}');
   }
 
-  static Future<TorrentClientStats> fetchQBittorrent() async {
+  static Future<TorrentClientStats> fetchQBittorrent({Duration timeout = _timeout}) async {
     final base = HomelabarrDevConfig.normalizeBaseUrl(HomelabarrDevConfig.qbitHost);
-    final cookie = await _qbitLoginCookie(
+    var cookie = await _qbitLoginCookie(
       base,
       HomelabarrDevConfig.qbitUser,
       HomelabarrDevConfig.qbitPass,
+      timeout: timeout,
     );
-    final headers = {if (cookie != null && cookie.isNotEmpty) 'Cookie': cookie};
-    final res = await http
+    var headers = {if (cookie != null && cookie.isNotEmpty) 'Cookie': cookie};
+    var res = await http
         .get(Uri.parse('$base/api/v2/torrents/info?sort=added_on&reverse=true'), headers: headers)
-        .timeout(_timeout);
+        .timeout(timeout);
+    if (res.statusCode == 401 || res.statusCode == 403) {
+      cookie = await _qbitLoginCookie(
+        base,
+        HomelabarrDevConfig.qbitUser,
+        HomelabarrDevConfig.qbitPass,
+        timeout: timeout,
+        forceRefresh: true,
+      );
+      headers = {if (cookie != null && cookie.isNotEmpty) 'Cookie': cookie};
+      res = await http
+          .get(Uri.parse('$base/api/v2/torrents/info?sort=added_on&reverse=true'), headers: headers)
+          .timeout(timeout);
+    }
     if (res.statusCode != 200) throw Exception('HTTP ${res.statusCode}');
     final list = json.decode(res.body) as List<dynamic>;
     int totalDl = 0;
@@ -175,6 +205,7 @@ class DownloadClientsApi {
   static Future<Map<String, dynamic>> _transmissionRpc(
     String method, [
     Map<String, dynamic>? arguments,
+    Duration timeout = _timeout,
   ]) async {
     final base = HomelabarrDevConfig.normalizeBaseUrl(HomelabarrDevConfig.transHost);
     if (base.isEmpty) throw Exception('Enter Transmission host URL first');
@@ -188,13 +219,13 @@ class DownloadClientsApi {
       headers['Authorization'] = 'Basic $auth';
     }
     final payload = json.encode({'method': method, if (arguments != null) 'arguments': arguments});
-    var res = await http.post(Uri.parse(rpcUrl), headers: headers, body: payload).timeout(_timeout);
+    var res = await http.post(Uri.parse(rpcUrl), headers: headers, body: payload).timeout(timeout);
     if (res.statusCode == 409) {
       final sid = res.headers['x-transmission-session-id'] ?? '';
       if (sid.isNotEmpty) {
         _transmissionSessionId = sid;
         headers['X-Transmission-Session-Id'] = sid;
-        res = await http.post(Uri.parse(rpcUrl), headers: headers, body: payload).timeout(_timeout);
+        res = await http.post(Uri.parse(rpcUrl), headers: headers, body: payload).timeout(timeout);
       }
     }
     if (res.statusCode != 200) throw Exception('Transmission RPC HTTP ${res.statusCode}');
@@ -211,20 +242,24 @@ class DownloadClientsApi {
     return 'Connected to Transmission $ver';
   }
 
-  static Future<TorrentClientStats> fetchTransmission() async {
-    final args = await _transmissionRpc('torrent-get', {
-      'fields': [
-        'id',
-        'name',
-        'status',
-        'percentDone',
-        'totalSize',
-        'rateDownload',
-        'rateUpload',
-        'eta',
-        'uploadRatio',
-      ],
-    });
+  static Future<TorrentClientStats> fetchTransmission({Duration timeout = _timeout}) async {
+    final args = await _transmissionRpc(
+      'torrent-get',
+      {
+        'fields': [
+          'id',
+          'name',
+          'status',
+          'percentDone',
+          'totalSize',
+          'rateDownload',
+          'rateUpload',
+          'eta',
+          'uploadRatio',
+        ],
+      },
+      timeout,
+    );
     final list = (args['torrents'] as List<dynamic>?) ?? [];
     int totalDl = 0;
     int totalUl = 0;
@@ -278,26 +313,49 @@ class DownloadClientsApi {
   }
 
   // ========================== Deluge ==========================
-  static Future<String> _delugeLoginCookie(String base, String pass) async {
+  static Future<String> _delugeLoginCookie(
+    String base,
+    String pass, {
+    Duration timeout = _timeout,
+    bool forceRefresh = false,
+  }) async {
+    if (!forceRefresh && _delugeCookieCache.containsKey(base)) {
+      return _delugeCookieCache[base]!;
+    }
     final res = await http
         .post(
           Uri.parse('$base/json'),
           headers: {'Content-Type': 'application/json'},
           body: json.encode({'id': 1, 'method': 'auth.login', 'params': [pass]}),
         )
-        .timeout(_timeout);
+        .timeout(timeout);
     if (res.statusCode != 200) throw Exception('Deluge HTTP ${res.statusCode}');
     final decoded = json.decode(res.body) as Map<String, dynamic>;
-    if (decoded['result'] != true) throw Exception('Deluge login rejected');
+    if (decoded['result'] != true) {
+      _delugeCookieCache.remove(base);
+      throw Exception('Deluge login rejected');
+    }
     final rawCookie = res.headers['set-cookie'] ?? '';
     final match = RegExp(r'_session_id=[^;]+').firstMatch(rawCookie);
-    return match?.group(0) ?? '';
+    final cookie = match?.group(0) ?? '';
+    _delugeCookieCache[base] = cookie;
+    return cookie;
   }
 
-  static Future<dynamic> _delugeCall(String method, List<dynamic> params) async {
+  static Future<dynamic> _delugeCall(
+    String method,
+    List<dynamic> params, {
+    Duration timeout = _timeout,
+    bool forceRefresh = false,
+  }) async {
     final base = HomelabarrDevConfig.normalizeBaseUrl(HomelabarrDevConfig.delugeHost);
     if (base.isEmpty) throw Exception('Enter Deluge WebUI host URL first');
-    final cookie = await _delugeLoginCookie(base, HomelabarrDevConfig.delugePass);
+    final cookie = await _delugeLoginCookie(
+      base,
+      HomelabarrDevConfig.delugePass,
+      timeout: timeout,
+      forceRefresh: forceRefresh,
+    );
     final res = await http
         .post(
           Uri.parse('$base/json'),
@@ -307,23 +365,32 @@ class DownloadClientsApi {
           },
           body: json.encode({'id': 2, 'method': method, 'params': params}),
         )
-        .timeout(_timeout);
+        .timeout(timeout);
     if (res.statusCode != 200) throw Exception('Deluge HTTP ${res.statusCode}');
     final decoded = json.decode(res.body) as Map<String, dynamic>;
-    if (decoded['error'] != null) throw Exception('Deluge: ${decoded['error']}');
+    if (decoded['error'] != null) {
+      if (!forceRefresh) {
+        return _delugeCall(method, params, timeout: timeout, forceRefresh: true);
+      }
+      throw Exception('Deluge: ${decoded['error']}');
+    }
     return decoded['result'];
   }
 
   static Future<String> testDeluge() async {
-    final ver = await _delugeCall('daemon.info', []);
+    final ver = await _delugeCall('daemon.info', [], forceRefresh: true);
     return 'Connected to Deluge ${ver ?? "WebUI"}';
   }
 
-  static Future<TorrentClientStats> fetchDeluge() async {
-    final result = await _delugeCall('web.update_ui', [
-      ['name', 'state', 'progress', 'total_size', 'download_payload_rate', 'upload_payload_rate', 'eta', 'ratio'],
-      {},
-    ]);
+  static Future<TorrentClientStats> fetchDeluge({Duration timeout = _timeout}) async {
+    final result = await _delugeCall(
+      'web.update_ui',
+      [
+        ['name', 'state', 'progress', 'total_size', 'download_payload_rate', 'upload_payload_rate', 'eta', 'ratio'],
+        {},
+      ],
+      timeout: timeout,
+    );
     final map = (result as Map<String, dynamic>?) ?? {};
     final torrents = (map['torrents'] as Map<String, dynamic>?) ?? {};
     int totalDl = 0;
@@ -522,6 +589,7 @@ class DownloadClientsApi {
     String title,
     List<String> options,
   ) async {
+    if (!context.mounted) return null;
     return showModalBottomSheet<String>(
       context: context,
       backgroundColor: Theme.of(context).primaryColor,

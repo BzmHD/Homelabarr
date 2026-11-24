@@ -7,7 +7,6 @@ import 'package:lunasea/modules/homelabarr_dev/overseerr_route.dart';
 import 'package:lunasea/modules/homelabarr_dev/prowlarr_route.dart';
 import 'package:lunasea/modules/homelabarr_dev/bazarr_route.dart';
 import 'package:lunasea/modules/homelabarr_dev/readarr_route.dart';
-import 'package:lunasea/modules/homelabarr_dev/dev_settings_route.dart';
 
 class LunaDrawer extends StatelessWidget {
   final String page;

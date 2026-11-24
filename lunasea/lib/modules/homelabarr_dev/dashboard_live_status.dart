@@ -49,77 +49,80 @@ class DashboardLiveStatusService {
     refreshing.value = true;
     _lastFetch = DateTime.now();
 
-    final p = LunaProfile.current;
-    final map = <String, ServiceLiveStatus>{};
-    final tasks = <Future<void>>[];
+    try {
+      final p = LunaProfile.current;
+      final map = <String, ServiceLiveStatus>{};
+      final tasks = <Future<void>>[];
 
-    if (p.nzbgetEnabled && p.nzbgetHost.trim().isNotEmpty) {
-      tasks.add(_pollNzbget(p).then((s) {
-        if (s != null) map['nzbget'] = s;
-      }));
-    }
-    if (p.sabnzbdEnabled && p.sabnzbdHost.trim().isNotEmpty && p.sabnzbdKey.trim().isNotEmpty) {
-      tasks.add(_pollSab(p).then((s) {
-        if (s != null) map['sabnzbd'] = s;
-      }));
-    }
-    if (p.radarrEnabled && p.radarrHost.trim().isNotEmpty && p.radarrKey.trim().isNotEmpty) {
-      tasks.add(_pollArr(p.radarrHost, p.radarrKey, '/api/v3/queue').then((s) {
-        if (s != null) map['radarr'] = s;
-      }));
-    }
-    if (p.sonarrEnabled && p.sonarrHost.trim().isNotEmpty && p.sonarrKey.trim().isNotEmpty) {
-      tasks.add(_pollArr(p.sonarrHost, p.sonarrKey, '/api/v3/queue').then((s) {
-        if (s != null) map['sonarr'] = s;
-      }));
-    }
-    if (HomelabarrDevConfig.qbitEnabled && HomelabarrDevConfig.qbitHost.isNotEmpty) {
-      tasks.add(_pollTorrent('qBittorrent', DownloadClientsApi.fetchQBittorrent).then((s) {
-        if (s != null) map['qbittorrent'] = s;
-      }));
-    }
-    if (HomelabarrDevConfig.transEnabled && HomelabarrDevConfig.transHost.isNotEmpty) {
-      tasks.add(_pollTorrent('Transmission', DownloadClientsApi.fetchTransmission).then((s) {
-        if (s != null) map['transmission'] = s;
-      }));
-    }
-    if (HomelabarrDevConfig.delugeEnabled && HomelabarrDevConfig.delugeHost.isNotEmpty) {
-      tasks.add(_pollTorrent('Deluge', DownloadClientsApi.fetchDeluge).then((s) {
-        if (s != null) map['deluge'] = s;
-      }));
-    }
-    if (HomelabarrDevConfig.overseerrEnabled &&
-        HomelabarrDevConfig.overseerrHost.isNotEmpty &&
-        HomelabarrDevConfig.overseerrApiKey.isNotEmpty) {
-      tasks.add(_pollOverseerr().then((s) {
-        if (s != null) map['overseerr'] = s;
-      }));
-    }
-    if (HomelabarrDevConfig.readarrEnabled &&
-        HomelabarrDevConfig.readarrHost.isNotEmpty &&
-        HomelabarrDevConfig.readarrApiKey.isNotEmpty) {
-      tasks.add(_pollReadarr().then((s) {
-        if (s != null) map['readarr'] = s;
-      }));
-    }
-    if (HomelabarrDevConfig.bazarrEnabled &&
-        HomelabarrDevConfig.bazarrHost.isNotEmpty &&
-        HomelabarrDevConfig.bazarrApiKey.isNotEmpty) {
-      tasks.add(_pollBazarr().then((s) {
-        if (s != null) map['bazarr'] = s;
-      }));
-    }
-    if (HomelabarrDevConfig.prowlarrEnabled &&
-        HomelabarrDevConfig.prowlarrHost.isNotEmpty &&
-        HomelabarrDevConfig.prowlarrApiKey.isNotEmpty) {
-      tasks.add(_pollProwlarr().then((s) {
-        if (s != null) map['prowlarr'] = s;
-      }));
-    }
+      if (p.nzbgetEnabled && p.nzbgetHost.trim().isNotEmpty) {
+        tasks.add(_pollNzbget(p).then((s) {
+          if (s != null) map['nzbget'] = s;
+        }));
+      }
+      if (p.sabnzbdEnabled && p.sabnzbdHost.trim().isNotEmpty && p.sabnzbdKey.trim().isNotEmpty) {
+        tasks.add(_pollSab(p).then((s) {
+          if (s != null) map['sabnzbd'] = s;
+        }));
+      }
+      if (p.radarrEnabled && p.radarrHost.trim().isNotEmpty && p.radarrKey.trim().isNotEmpty) {
+        tasks.add(_pollArr(p.radarrHost, p.radarrKey, '/api/v3/queue').then((s) {
+          if (s != null) map['radarr'] = s;
+        }));
+      }
+      if (p.sonarrEnabled && p.sonarrHost.trim().isNotEmpty && p.sonarrKey.trim().isNotEmpty) {
+        tasks.add(_pollArr(p.sonarrHost, p.sonarrKey, '/api/v3/queue').then((s) {
+          if (s != null) map['sonarr'] = s;
+        }));
+      }
+      if (HomelabarrDevConfig.qbitEnabled && HomelabarrDevConfig.qbitHost.isNotEmpty) {
+        tasks.add(_pollTorrent('qBittorrent', () => DownloadClientsApi.fetchQBittorrent(timeout: _timeout)).then((s) {
+          if (s != null) map['qbittorrent'] = s;
+        }));
+      }
+      if (HomelabarrDevConfig.transEnabled && HomelabarrDevConfig.transHost.isNotEmpty) {
+        tasks.add(_pollTorrent('Transmission', () => DownloadClientsApi.fetchTransmission(timeout: _timeout)).then((s) {
+          if (s != null) map['transmission'] = s;
+        }));
+      }
+      if (HomelabarrDevConfig.delugeEnabled && HomelabarrDevConfig.delugeHost.isNotEmpty) {
+        tasks.add(_pollTorrent('Deluge', () => DownloadClientsApi.fetchDeluge(timeout: _timeout)).then((s) {
+          if (s != null) map['deluge'] = s;
+        }));
+      }
+      if (HomelabarrDevConfig.overseerrEnabled &&
+          HomelabarrDevConfig.overseerrHost.isNotEmpty &&
+          HomelabarrDevConfig.overseerrApiKey.isNotEmpty) {
+        tasks.add(_pollOverseerr().then((s) {
+          if (s != null) map['overseerr'] = s;
+        }));
+      }
+      if (HomelabarrDevConfig.readarrEnabled &&
+          HomelabarrDevConfig.readarrHost.isNotEmpty &&
+          HomelabarrDevConfig.readarrApiKey.isNotEmpty) {
+        tasks.add(_pollReadarr().then((s) {
+          if (s != null) map['readarr'] = s;
+        }));
+      }
+      if (HomelabarrDevConfig.bazarrEnabled &&
+          HomelabarrDevConfig.bazarrHost.isNotEmpty &&
+          HomelabarrDevConfig.bazarrApiKey.isNotEmpty) {
+        tasks.add(_pollBazarr().then((s) {
+          if (s != null) map['bazarr'] = s;
+        }));
+      }
+      if (HomelabarrDevConfig.prowlarrEnabled &&
+          HomelabarrDevConfig.prowlarrHost.isNotEmpty &&
+          HomelabarrDevConfig.prowlarrApiKey.isNotEmpty) {
+        tasks.add(_pollProwlarr().then((s) {
+          if (s != null) map['prowlarr'] = s;
+        }));
+      }
 
-    await Future.wait(tasks);
-    statuses.value = map;
-    refreshing.value = false;
+      await Future.wait(tasks);
+      statuses.value = map;
+    } finally {
+      refreshing.value = false;
+    }
   }
 
   static Future<ServiceLiveStatus?> _pollNzbget(LunaProfile p) async {

@@ -16,6 +16,14 @@
       "category": "utilities",
       "versions": [
         {
+          "version": "1.2.1",
+          "date": "2026-11-24",
+          "localizedDescription": "Stability, security & reliability hardening release: fixes Global Search rebuilds/timeouts/race conditions, adds Backup confirmation + instant Provider reset, torrent session cookie caching (qBittorrent/Deluge), and Overseerr duplicate-tap protection.",
+          "downloadURL": "https://github.com/nachocheese1100/Homelabarr/releases/download/v1.2.1/Homelabarr-v1.2.1-unsigned.ipa",
+          "size": 13645042,
+          "minOSVersion": "26.0"
+        },
+        {
           "version": "1.2.0",
           "date": "2026-11-24",
           "localizedDescription": "Adds Readarr (eBooks & Audiobooks with format badges, eBook/Spoken switcher, interactive & Prowlarr search), Live Dashboard Status + Now Downloading strip, Global Search Everything, and Full JSON Backup & Restore.",

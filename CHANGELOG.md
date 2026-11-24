@@ -6,6 +6,18 @@ Homelabarr is a fork of [CometTools/LunaSea](https://github.com/CometTools/LunaS
 
 ---
 
+## [v1.2.1] — 2026-11-24
+
+### Fixed & Hardened
+- **Global Search Stability:** Fixed `GlobalKey<ScaffoldState>` recreation inside `build()`, added HTTP timeouts & status-code validation on all Radarr/Sonarr/Readarr/Overseerr actions, guarded empty root-folder/quality-profile lists, added request sequence tracking to drop stale overlapping searches, and added per-item in-flight guards to prevent duplicate taps.
+- **Backup & Restore Safety:** Added confirmation dialog before overwriting settings, automatic `Provider` state reset (`Radarr`, `Sonarr`, `Lidarr`, `NZBGet`, `SABnzbd`, `Tautulli`) immediately after restore, timestamped (`HHmmss`) filenames, and automatic temp-file cleanup after sharing.
+- **Dashboard Live Status Resilience:** Wrapped refresh in `try/finally` so polling can never wedge, and enforced a 5-second timeout on torrent client polls so offline containers cannot stall the Dashboard.
+- **Torrent Clients:** Added in-memory session cookie caching for qBittorrent (`SID`) and Deluge (`_session_id`) with automatic `401`/`403` refresh (preventing IP bans), fixed client-switching race conditions, disposed the Add Torrent `TextEditingController`, and added `context.mounted` guards before opening picker sheets.
+- **Unified Prowlarr Config & Overseerr Deduplication:** Eliminated duplicate Prowlarr config state and added in-flight guards on Overseerr Request/Approve/Decline/Delete actions.
+- **Android Permanent Release Signing:** Signed `Homelabarr-v1.2.1-android.apk` with a dedicated permanent release keystore for clean in-place upgrades going forward.
+
+---
+
 ## [v1.2.0] — 2026-11-24
 
 ### Added
