@@ -6,6 +6,18 @@ Homelabarr is a fork of [CometTools/LunaSea](https://github.com/CometTools/LunaS
 
 ---
 
+## [v1.2.2] — 2026-11-25
+
+### Added & Improved
+- **Add Screen Search Toggle:** Added a dedicated, visible **"Start Search for Missing"** toggle switch tile (`LunaSwitch`) directly in the Add Details list alongside **"Monitor"** for both **Radarr** and **Sonarr**.
+- **Linked Monitored & Search Behavior:**
+  - Toggling **Monitored** to **OFF** automatically switches **Start Search** to **OFF** (preventing orphaned searches on unmonitored titles).
+  - Toggling **Monitored** to **ON** automatically switches **Start Search** to **ON**.
+  - **Start Search** can still be toggled independently at any time directly on the screen before adding.
+- **Default Auto-Search on Add:** Set `ADD_MOVIE_SEARCH_FOR_MISSING` and `ADD_SERIES_SEARCH_FOR_MISSING` defaults to `true` across the application database tables, ensuring new additions trigger immediate indexer searches instead of remaining monitored and waiting for periodic RSS syncs.
+
+---
+
 ## [v1.2.1] — 2026-11-24
 
 ### Fixed & Hardened
