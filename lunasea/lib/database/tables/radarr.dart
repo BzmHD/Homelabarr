@@ -23,7 +23,7 @@ enum RadarrDatabase<T> with LunaTableMixin<T> {
   ADD_MOVIE_DEFAULT_QUALITY_PROFILE_ID<int?>(null),
   ADD_MOVIE_DEFAULT_MINIMUM_AVAILABILITY_ID<String>('announced'),
   ADD_MOVIE_DEFAULT_TAGS<List>([]),
-  ADD_MOVIE_SEARCH_FOR_MISSING<bool>(false),
+  ADD_MOVIE_SEARCH_FOR_MISSING<bool>(true),
   ADD_DISCOVER_USE_SUGGESTIONS<bool>(true),
   MANUAL_IMPORT_DEFAULT_MODE<String>('copy'),
   QUEUE_PAGE_SIZE<int>(50),
