@@ -16,6 +16,14 @@
       "category": "utilities",
       "versions": [
         {
+          "version": "1.2.2",
+          "date": "2026-11-25",
+          "localizedDescription": "Fixes automatic indexer searches on add: sets Radarr ('searchForMovie') and Sonarr ('searchForMissing') defaults to true so adding media automatically queries indexers and downloads immediately.",
+          "downloadURL": "https://github.com/nachocheese1100/Homelabarr/releases/download/v1.2.2/Homelabarr-v1.2.2-unsigned.ipa",
+          "size": 13585513,
+          "minOSVersion": "26.0"
+        },
+        {
           "version": "1.2.1",
           "date": "2026-11-24",
           "localizedDescription": "Stability, security & reliability hardening release: fixes Global Search rebuilds/timeouts/race conditions, adds Backup confirmation + instant Provider reset, torrent session cookie caching (qBittorrent/Deluge), and Overseerr duplicate-tap protection.",
