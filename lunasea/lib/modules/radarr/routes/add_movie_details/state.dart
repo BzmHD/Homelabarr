@@ -17,6 +17,16 @@ class RadarrAddMovieDetailsState extends ChangeNotifier {
   set monitored(bool monitored) {
     _monitored = monitored;
     RadarrDatabase.ADD_MOVIE_DEFAULT_MONITORED_STATE.update(_monitored);
+    // Link search toggle: toggling monitored toggles search state
+    searchForMovie = monitored;
+    notifyListeners();
+  }
+
+  bool _searchForMovie = RadarrDatabase.ADD_MOVIE_SEARCH_FOR_MISSING.read();
+  bool get searchForMovie => _searchForMovie;
+  set searchForMovie(bool searchForMovie) {
+    _searchForMovie = searchForMovie;
+    RadarrDatabase.ADD_MOVIE_SEARCH_FOR_MISSING.update(_searchForMovie);
     notifyListeners();
   }
 

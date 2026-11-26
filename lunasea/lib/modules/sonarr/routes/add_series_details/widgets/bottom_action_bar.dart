@@ -46,6 +46,7 @@ class SonarrAddSeriesDetailsActionBar extends StatelessWidget {
         tags: _state.tags,
         seriesType: _state.seriesType,
         monitorType: _state.monitorType,
+        searchForMissingEpisodes: _state.searchForMissing,
       )
           .then((series) async {
         context.read<SonarrState>().fetchAllSeries();

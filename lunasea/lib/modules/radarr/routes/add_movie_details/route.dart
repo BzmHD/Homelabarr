@@ -122,6 +122,7 @@ class _State extends State<AddMovieDetailsRoute>
           ),
           const RadarrAddMovieDetailsRootFolderTile(),
           const RadarrAddMovieDetailsMonitoredTile(),
+          const RadarrAddMovieDetailsSearchTile(),
           const RadarrAddMovieDetailsMinimumAvailabilityTile(),
           const RadarrAddMovieDetailsQualityProfileTile(),
           const RadarrAddMovieDetailsTagsTile(),

@@ -123,6 +123,7 @@ class _State extends State<AddSeriesDetailsRoute>
         ),
         const SonarrSeriesAddDetailsRootFolderTile(),
         const SonarrSeriesAddDetailsMonitorTile(),
+        const SonarrSeriesAddDetailsSearchTile(),
         const SonarrSeriesAddDetailsQualityProfileTile(),
         if (languageProfiles.isNotEmpty)
           const SonarrSeriesAddDetailsLanguageProfileTile(),

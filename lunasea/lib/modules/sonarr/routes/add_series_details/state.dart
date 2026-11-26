@@ -52,6 +52,19 @@ class SonarrSeriesAddDetailsState extends ChangeNotifier {
   SonarrSeriesMonitorType get monitorType => _monitorType;
   set monitorType(SonarrSeriesMonitorType monitorType) {
     _monitorType = monitorType;
+    if (_monitorType == SonarrSeriesMonitorType.NONE) {
+      searchForMissing = false;
+    } else {
+      searchForMissing = true;
+    }
+    notifyListeners();
+  }
+
+  bool _searchForMissing = SonarrDatabase.ADD_SERIES_SEARCH_FOR_MISSING.read();
+  bool get searchForMissing => _searchForMissing;
+  set searchForMissing(bool searchForMissing) {
+    _searchForMissing = searchForMissing;
+    SonarrDatabase.ADD_SERIES_SEARCH_FOR_MISSING.update(_searchForMissing);
     notifyListeners();
   }
 

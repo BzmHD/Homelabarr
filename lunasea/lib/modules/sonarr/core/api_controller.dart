@@ -713,6 +713,7 @@ class SonarrAPIController {
     required SonarrSeriesMonitorType monitorType,
     required List<SonarrTag> tags,
     SonarrLanguageProfile? languageProfile,
+    bool? searchForMissingEpisodes,
     bool showSnackbar = true,
   }) async {
     if (context.read<SonarrState>().enabled) {
@@ -730,7 +731,7 @@ class SonarrAPIController {
             rootFolder: rootFolder,
             monitorType: monitorType,
             tags: tags,
-            searchForMissingEpisodes:
+            searchForMissingEpisodes: searchForMissingEpisodes ??
                 SonarrDatabase.ADD_SERIES_SEARCH_FOR_MISSING.read(),
             searchForCutoffUnmetEpisodes:
                 SonarrDatabase.ADD_SERIES_SEARCH_FOR_CUTOFF_UNMET.read(),
